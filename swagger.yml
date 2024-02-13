@@ -1,0 +1,298 @@
+openapi: 3.0.0
+info:
+  title: Book Inventory Service
+  version: 1.0.0
+paths:
+  /book:
+    get:
+      summary: Get books
+      tags:
+        - Books
+      responses:
+        '200':
+          description: Book successfully found
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+    post:
+      summary: Create book
+      tags:
+        - Books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertBookSchema'
+      responses:
+        '201':
+          description: Book successfully created
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+  /book/{id}:
+    get:
+      summary: Get book
+      tags:
+        - Books
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Id of the book
+      responses:
+        '200':
+          description: Book successfully found
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+    put:
+      summary: Update book
+      tags:
+        - Books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertBookSchema'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Id of the book
+      responses:
+        '200':
+          description: Book successfully updated
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+    delete:
+      summary: Delete book
+      tags:
+        - Books
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Id of the book
+      responses:
+        '200':
+          description: Book successfully deleted
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+  /book/{id}/quantity:
+    put:
+      summary: Increment or decrement quantity of available books
+      tags:
+        - Books
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Id of the book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateQtySchema'
+      responses:
+        '200':
+          description: Quantity successfully updated
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+  /author:
+    get:
+      summary: Get authors
+      tags:
+        - Authors
+      responses:
+        '200':
+          description: Author successfully found
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+    post:
+      summary: Create author
+      tags:
+        - Authors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertAuthorSchema'
+      responses:
+        '201':
+          description: Author successfully created
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+  /author/{id}:
+    /author/{id}:
+    get:
+      summary: Get author
+      tags:
+        - Authors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Id of the author
+      responses:
+        '200':
+          description: Author successfully found
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+    put:
+      summary: Update author
+      tags:
+        - Authors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertAuthorSchema'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Id of the author
+      responses:
+        '200':
+          description: Author successfully updated
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+    delete:
+      summary: Delete author
+      tags:
+        - Authors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: Id of the author
+      responses:
+        '200':
+          description: Author successfully deleted
+        '400':
+          description: Bad request
+        '404':
+          description: Not Found
+        '500':
+          description: Something went wrong
+
+        
+
+components:
+  schemas:
+    UpsertBookSchema:
+      type: object
+      properties:
+        authorId:
+          type: number
+          description: The ID of author
+        title:
+          type: string
+          description: The title of the book
+        description:
+          type: string
+          description: The description of the book
+        isOutOfStock:
+          type: boolean
+          description: Indicator that shows if book is out of stock
+        price:
+          type: number
+          description: Price of the book
+        quantity:
+          type: number
+          description: Available quantity of the book
+        author:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the author.
+      required:
+        - title
+        - description
+        - isOutOfStock
+        - price
+        - quantity
+    UpsertAuthorSchema:
+        type: object
+        properties:
+          name:
+            type: string
+            description: The name of the author
+        required:
+          - name
+    UpdateQtySchema:
+        type: object
+        properties:
+          quantity:
+            type: number
+            description: The qount of available books
+          operation:
+            type: string
+            description: The qount of available books. Available values are increment and decrement
+        required:
+          - name
+          - operation
